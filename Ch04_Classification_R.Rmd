@@ -223,10 +223,14 @@ table(Test_COVID$SURVIVED)/nrow(Test_COVID)
 
 Q1. What metric will you use? Why? 
 
+I want to start by definitely looking at pneumonia: Its a major complication of Covid and might be a robust predictor of survivability. Similarly, looking at ICU helps. From the presence of NA's we might assume that while doctors made the decision to put some patients in an ICU or keep them out, others might have just not had the opportunity to be put in an ICU or their condition might have deteriorated very rapidly and suddenly once at the hospital. So let's start with those two:
+
 Your code:
 ```{r,echo=TRUE}
 #
 #
+fit1<- glm(SURVIVED_bin~PNEUMONIA+ICU,family=binomial,data= Train_Covid)
+summary(fit1)
 ```
 
 Your answer:
