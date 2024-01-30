@@ -229,8 +229,23 @@ Your code:
 ```{r,echo=TRUE}
 #
 #
-fit1<- glm(SURVIVED_bin~PNEUMONIA+ICU,family=binomial,data= Train_Covid)
+fit1<- glm(SURVIVED_bin~PNEUMONIA+ICU +PNEUMONIA*ICU,family=binomial,data= Train_COVID)
 summary(fit1)
+#Let's evaluate the model:
+
+#Confusion matrix
+fit1_predict = predict(fit1,Test_COVID,type="response")
+fit1_predict <- ifelse(fit1_predict > 0.5,1,0) # Probability check
+CM= table(Covid_Data$SURVIVED_bin, logit_Pred)
+print(CM)
+
+#ROC
+library(pROC)
+roc_score=roc(Test_COVID$SURVIVED_bin, fit1_predict) #AUC score
+plot(roc_score ,main ="ROC curve -- Logistic Regression ")
+
+#Well that's pretty abyssmal. 
+
 ```
 
 Your answer:
