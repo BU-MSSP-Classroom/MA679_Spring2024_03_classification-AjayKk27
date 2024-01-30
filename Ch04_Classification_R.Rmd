@@ -244,7 +244,7 @@ library(pROC)
 roc_score=roc(Test_COVID$SURVIVED_bin, fit1_predict) #AUC score
 plot(roc_score ,main ="ROC curve -- Logistic Regression ")
 
-#Well that's pretty abyssmal. 
+#Well that's pretty abysmal. 
 
 ```
 
@@ -316,7 +316,12 @@ In this problem, you will develop a model to predict whether a given car gets hi
 Your code:
 ```{r,echo=TRUE}
 #
-#
+#creating the binary variable:
+library(ISLR2)
+auto<- Auto
+auto$mpg01<- ifelse(auto$mpg<median(auto$mpg),0,1)
+auto$mpg01<-factor(auto$mpg01)
+
 ```
 
 Your answer:
@@ -329,6 +334,17 @@ Please write your answer in full sentences.
 
 
 (b) Explore the data graphically in order to investigate the association between `mpg01` and the other features. Which other features seem most likely to be useful in predicting `mpg01`? Scatterplots and boxplots may be useful tools to answer this question. Describe your findings.
+
+```{r}
+
+
+ggplot(data=auto, aes(mpg01, weight))+geom_boxplot()
+
+ggplot(data=auto, aes(mpg01, horsepower))+geom_boxplot()
+
+ggplot(data=auto, aes(mpg01,year))+geom_boxplot()
+```
+
 
 (c) Split the data into a training set and a test set.
 
