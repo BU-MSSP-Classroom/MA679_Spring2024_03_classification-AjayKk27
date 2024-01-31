@@ -470,10 +470,26 @@ Your code:
 ```{r,echo=TRUE}
 #
 #
+library(naivebayes)
+#Testing that our predictors are not correlated, since the key assumption of naive bayes is that our predictors for each class are independent.
+
+auto_mpg1<- auto_Test |> filter(mpg01==1) |> select('displacement', 'weight','year' )
+cor(auto_mpg1)
+
+#Unfortunately weight and displacement are highly correlated. So maybe we'll remove that variable 
+
+naive_bayes_auto<- naive_bayes(mpg01~displacement+year, auto_Training)
+plot(naive_bayes_auto)
+
+#Predictions and error:
+naive_predictions<- predict(naive_bayes_auto,auto_Test)
+#haha ^  
+error<- mean(naive_predictions!=auto_Test$mpg01)
+error
 ```
 
 Your answer:
-
+We get an 8.5% prediction error with Naive Bayes. 
 ~~~
 Please write your answer in full sentences.
 
