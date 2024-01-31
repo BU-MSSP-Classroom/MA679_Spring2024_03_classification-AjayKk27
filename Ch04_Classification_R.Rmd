@@ -499,14 +499,45 @@ Please write your answer in full sentences.
 
 (h) Perform KNN on the training data, with several values of K, in order to predict `mpg01`. Use only the variables that seemed most associated with `mpg01` in (b). What test errors do you obtain? Which value of K seems to perform the best on this data set?
 
+
 Your code:
 ```{r,echo=TRUE}
 #
 #
+library(class)
+auto_Training_knn<- auto_Training |> select(-name)
+auto_Test_knn<- auto_Test |> select(-name)
+#1 nearest neighbor
+neighborly1 <- knn(train = auto_Training_knn, 
+                      test = auto_Test_knn, 
+                      cl = auto_Training$mpg01, 
+                      k = 1) 
+error1<- mean(neighborly1!= auto_Test$mpg01)
+
+#3 nearest neighbors
+neighborly3 <- knn(train = auto_Training_knn, 
+                      test = auto_Test_knn, 
+                      cl = auto_Training$mpg01, 
+                      k = 3) 
+error3<- mean(neighborly3!= auto_Test$mpg01)
+
+#10 nearest neighbors
+neighborly10 <- knn(train = auto_Training_knn, 
+                      test = auto_Test_knn, 
+                      cl = auto_Training$mpg01, 
+                      k = 10) 
+error10<- mean(neighborly10 != auto_Test$mpg01)
+
+error1
+error3
+error10
+
+
 ```
 
 Your answer:
 
+10 nearest neighbors has the lowest error rate and 1 nearest neighbor has the largest error rate
 ~~~
 Please write your answer in full sentences.
 
