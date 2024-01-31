@@ -245,7 +245,7 @@ roc_score=roc(Test_COVID$SURVIVED_bin, fit1_predict) #AUC score
 plot(roc_score ,main ="ROC curve -- Logistic Regression ")
 
 #Well that's pretty abysmal. 
-
+#The fit of this model might as well be random, which is interesting given that superficially I thought this might be a good model. So there might need to be a lot of modifications made to the model. 
 ```
 
 Your answer:
@@ -337,12 +337,15 @@ Please write your answer in full sentences.
 
 ```{r}
 
+#I know these plots look to be a little backwards in terms of their interpretation in that we're looking at the differences in values of our predictors for values of our outcome, but its an easy way to see if there are substantial differences between the two outcome classes for each predictor.
 
 ggplot(data=auto, aes(mpg01, weight))+geom_boxplot()
 
 ggplot(data=auto, aes(mpg01, horsepower))+geom_boxplot()
 
 ggplot(data=auto, aes(mpg01,year))+geom_boxplot()
+
+ggplot(data=auto, aes(mpg01,displacement))+geom_boxplot()
 ```
 
 
@@ -352,6 +355,13 @@ Your code:
 ```{r,echo=TRUE}
 #
 #
+#We'll use a 70-30 split for training vs validation
+size<-floor(dim(auto)[1]*0.3)
+set.seed(350)
+samp_idx<-sample(1:dim(auto)[1],size,FALSE)
+auto_Training<- auto[-samp_idx,]
+auto_Test <- auto[samp_idx,]
+
 ```
 
 Your answer:
@@ -369,9 +379,29 @@ Your code:
 ```{r,echo=TRUE}
 #
 #
+library(MASS)
+
+#normalizing the variables we will use:
+auto_Training_normalized<- auto_Training
+auto_Training_normalized[,c(3,5,7)]<- scale(auto_Training_normalized[,c(3,5,7)])
+lda_auto<- lda(mpg01~displacement+weight+year, data=auto_Training_normalized)
+lda_auto
 ```
 
 Your answer:
+Now we have our lda model, let's test it and evaluate what the test error is:
+
+```{r}
+#normalizing Test data first:
+auto_Test_normalized<- auto_Test
+auto_Test_normalized[,c(3,5,7)]<- scale(auto_Test_normalized[,c(3,5,7)])
+lda_predictions<- predict(lda_auto, auto_Test_normalized)
+
+#calculating the error:
+mean(lda_predictions$class!= auto_Test_normalized$mpg01)
+
+```
+This is a 6% error which I'd say is pretty low. Now, we would probably need to contextualize this error in relation to a null model or the application that we are using this model for to further evaluate whether this is acceptable error or not. 
 
 ~~~
 Please write your answer in full sentences.
