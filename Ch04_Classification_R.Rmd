@@ -416,9 +416,19 @@ Your code:
 ```{r,echo=TRUE}
 #
 #
+qda_auto<- qda(mpg01~displacement+weight+year, data=auto_Training_normalized)
+qda_auto
+
+#Testing
+qda_predictions<- predict(qda_auto, auto_Test_normalized)
+
+#calculating the error:
+error<-mean(qda_predictions$class!= auto_Test_normalized$mpg01)
+error
 ```
 
 Your answer:
+We have a marginally smaller error than for LDA at 5.9%. Again, this is quite good.
 
 ~~~
 Please write your answer in full sentences.
@@ -433,9 +443,19 @@ Your code:
 ```{r,echo=TRUE}
 #
 #
+
+logistic_fit<- glm(mpg01~displacement+weight+year, family = 'binomial',data=auto_Training)
+summary(logistic_fit)
+logistic_probabilities<- predict(logistic_fit, auto_Test,type='response')
+logistic_predictions<- rep(1,length(logistic_probabilities))
+logistic_predictions[logistic_probabilities<0.5]<-0
+error<- mean(logistic_predictions!= auto_Test$mpg01)
+error
+
 ```
 
 Your answer:
+This has the largest error of our three models so far but again, not by much. The error is 6.8% which is really not bad. 
 
 ~~~
 Please write your answer in full sentences.
